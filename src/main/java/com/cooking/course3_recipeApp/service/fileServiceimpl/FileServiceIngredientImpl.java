@@ -1,4 +1,4 @@
-package com.cooking.course3_recipeApp.service.impl;
+package com.cooking.course3_recipeApp.service.fileServiceimpl;
 
 import com.cooking.course3_recipeApp.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,16 +7,14 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 @Service
-public class FileServiceImpl implements FileService {
-    @Value("${path.to.data.file}")
+public class FileServiceIngredientImpl implements FileService {
+
+    @Value("${path.to.IngredientData.file}")
     private String dataFilePath;
 
-    @Value("${name.of.data.file}")
+    @Value("${name.of.IngredientData.file}")
     private String dataFileName;
-
-
     @Override
     public boolean saveToFile(String json) {
         try {
@@ -32,7 +30,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String readFromFile() {
         try {
-           return Files.readString(Path.of(dataFilePath, dataFileName));
+            return Files.readString(Path.of(dataFilePath, dataFileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,6 +47,5 @@ public class FileServiceImpl implements FileService {
             e.printStackTrace();
             return false;
         }
-
     }
 }

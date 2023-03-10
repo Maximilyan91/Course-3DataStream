@@ -2,9 +2,9 @@ package com.cooking.course3_recipeApp.service.impl;
 
 import com.cooking.course3_recipeApp.exception.ValidationException;
 import com.cooking.course3_recipeApp.model.Recipe;
-import com.cooking.course3_recipeApp.service.FileService;
 import com.cooking.course3_recipeApp.service.RecipeService;
 import com.cooking.course3_recipeApp.service.ValidationService;
+import com.cooking.course3_recipeApp.service.fileServiceimpl.FileServiceRecipeImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +18,12 @@ import java.util.Optional;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    private final FileService fileService;
+    private final FileServiceRecipeImpl fileService;
     private static Map<Integer, Recipe> recipes = new HashMap<>();
     private static int id = 0;
     private final ValidationService validationService;
 
-    public RecipeServiceImpl(FileService fileService, ValidationService validationService) {
+    public RecipeServiceImpl(FileServiceRecipeImpl fileService, ValidationService validationService) {
         this.fileService = fileService;
         this.validationService = validationService;
     }
@@ -38,8 +38,9 @@ public class RecipeServiceImpl implements RecipeService {
         if (!validationService.validate(recipe)) {
             throw new ValidationException(recipe.toString());
         }
+        Recipe newRecipe = recipes.put(id++, recipe);
         saveToFile();
-        return recipes.put(id++, recipe);
+        return newRecipe;
     }
 
     @Override
@@ -52,8 +53,10 @@ public class RecipeServiceImpl implements RecipeService {
         if (!validationService.validate(recipe)) {
             throw new ValidationException(recipe.toString());
         }
+
+        Recipe updatedRecipe = recipes.replace(id, recipe);
         saveToFile();
-        return recipes.replace(id, recipe);
+        return updatedRecipe;
     }
 
 
